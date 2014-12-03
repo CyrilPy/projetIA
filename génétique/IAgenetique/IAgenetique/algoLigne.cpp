@@ -6,9 +6,9 @@
 #include <time.h>
 
 int const tailleTableau(10);
-int const taillePopulation(60);
-int const tailleSelection(60);
-int const nbMaxGeneration(30);
+int const taillePopulation(10);
+int const tailleSelection(10);
+int const nbMaxGeneration(10);
 
 using namespace std;
 
@@ -89,63 +89,68 @@ void mutation(int tab[][tailleTableau]){
 
 	//cout << "mutation (enfant, lopus, valeur): " << enfant << " " << m << " " << tab[enfant][m] << endl;
 }
-void remplacement(int tab[][tailleTableau], int tabEnf[][tailleTableau], int parentsChoisis[]){
-	cout << endl;
-	cout << endl;
-	for (int i = 0; i < tailleSelection; i++){
-		for (int j = 0; j < tailleTableau; j++){
-			tab[parentsChoisis[i]][j] = tabEnf[i][j];
-		}
-		//cout << "parentsChoisis: " << parentsChoisis[i] << endl;
-	}
+void remplacement(int tabPopulation[][tailleTableau], int tabPar[][tailleTableau], int tabEnf[][tailleTableau], int parentsChoisis[]){
+	cout << endl;	
+	// on remplace les parents par les enfants
+
+	//for (int i = 0; i < tailleSelection; i++){
+	//	for (int j = 0; j < tailleTableau; j++){
+	//		tabPopulation[parentsChoisis[i]][j] = tabEnf[i][j];
+	//	}
+	//	//cout << "parentsChoisis: " << parentsChoisis[i] << endl;
+	//
 	// on garde les 2 meilleurs des 4 (2 parents, 2 enfants)
-	
-	/*
-	int p1 = evaluer(tab, 0);
-	int p2 = evaluer(tab, 1);
-	int e1 = evaluer(tab, 2);
-	int e2 = evaluer(tab, 3);
 
-	if (p1 - e1 >= 0){
-		if (p2 - e1 >= 0){
-			if (p1 - e1 >= p2 - e1){
-				for (int i = 0; i < tailleTableau; i++){
-					tab[0][i] = tab[2][i];
+	int p1;
+	int p2;
+	int e1;
+	int e2;
+
+	for (int k = 0; k < tailleSelection; k = k + 2){
+		int p1 = evaluer(tabPar, k);
+		int p2 = evaluer(tabPar, k+1);
+		int e1 = evaluer(tabEnf, k);
+		int e2 = evaluer(tabEnf, k+1);
+
+		if (p1 - e1 >= 0){
+			if (p2 - e1 >= 0){
+				if (p1 - e1 >= p2 - e1){
+					for (int i = 0; i < tailleTableau; i++){
+						tabPopulation[parentsChoisis[k]][i] = tabEnf[k][i];
+					}
+				}
+				else{
+					for (int i = 0; i < tailleTableau; i++){
+						tabPar[k+1][i] = tabEnf[k][i];
+					}
 				}
 			}
 			else{
 				for (int i = 0; i < tailleTableau; i++){
-					tab[1][i] = tab[2][i];
+					tabPar[k][i] = tabEnf[k][i];
 				}
 			}
 		}
-		else{
-			for (int i = 0; i < tailleTableau; i++){
-				tab[0][i] = tab[2][i];
+		if (p1 - e2 >= 0){
+			if (p2 - e2 >= 0){
+				if (p1 - e2 >= p2 - e2){
+					for (int i = 0; i < tailleTableau; i++){
+						tabPar[k][i] = tabEnf[k+1][i];
+					}
+				}
+				else{
+					for (int i = 0; i < tailleTableau; i++){
+						tabPar[k+1][i] = tabEnf[k+1][i];
+					}
+				}
+			}
+			else{
+				for (int i = 0; i < tailleTableau; i++){
+					tabPar[k][i] = tabEnf[k+1][i];
+				}
 			}
 		}
 	}
-
-	if (p1 - e2 >= 0){
-		if (p2 - e2 >= 0){
-			if (p1 - e2 >= p2 - e2){
-				for (int i = 0; i < tailleTableau; i++){
-					tab[0][i] = tab[3][i];
-				}
-			}
-			else{
-				for (int i = 0; i < tailleTableau; i++){
-					tab[1][i] = tab[3][i];
-				}
-			}
-		}
-		else{
-			for (int i = 0; i < tailleTableau; i++){
-				tab[0][i] = tab[3][i];
-			}
-		}
-	}*/ 
-
 }
 int lancer(int tabPopulation[][tailleTableau], int tabParents[][tailleTableau], int tabEnfants[][tailleTableau], int tabMeilleur[]){
 	int generation = 0;
@@ -203,7 +208,7 @@ int lancer(int tabPopulation[][tailleTableau], int tabParents[][tailleTableau], 
 			cout << valeur << " ";
 		}*/
 
-		remplacement(tabPopulation, tabEnfants, parentsChoisis);
+		remplacement(tabPopulation, tabParents, tabEnfants, parentsChoisis);
 		/*cout << endl;
 		cout << endl;
 		cout << "Remplacement: " << generation << endl;
@@ -216,7 +221,7 @@ int lancer(int tabPopulation[][tailleTableau], int tabParents[][tailleTableau], 
 
 		generation++;
 		Sleep(1000);
-	}while (generation<nbMaxGeneration);
+	} while (min >=30);//generation<nbMaxGeneration);
 	return generation;
 }
 int main(){
